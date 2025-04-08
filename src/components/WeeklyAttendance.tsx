@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { format, startOfWeek, endOfWeek, eachDayOfInterval, addDays, isSameDay } from "date-fns";
+import { format, startOfWeek, endOfWeek, eachDayOfInterval, addDays, isSameDay, isAfter } from "date-fns";
+import { CalendarX, CalendarCheck } from "lucide-react";
 
 const WeeklyAttendance = () => {
   const { students, attendanceRecords, classes } = useAttendance();
@@ -23,7 +24,7 @@ const WeeklyAttendance = () => {
     const start = startOfWeek(currentWeek, { weekStartsOn: 1 }); // Monday as start of week
     const end = endOfWeek(currentWeek, { weekStartsOn: 1 });
     const days = eachDayOfInterval({ start, end });
-    setWeekDays(days);
+    setWeekDays(days.slice(0, 5)); // Only include weekdays (Mon-Fri)
   }, [currentWeek]);
 
   const getStatusForDay = (studentId: string, day: Date) => {
@@ -52,7 +53,11 @@ const WeeklyAttendance = () => {
   };
 
   const nextWeek = () => {
-    setCurrentWeek(prev => addDays(prev, 7));
+    const nextWeekDate = addDays(currentWeek, 7);
+    // Only allow navigating to future weeks if they're not after today
+    if (!isAfter(startOfWeek(nextWeekDate, { weekStartsOn: 1 }), new Date())) {
+      setCurrentWeek(nextWeekDate);
+    }
   };
 
   const isCurrentWeek = isSameDay(
@@ -63,7 +68,10 @@ const WeeklyAttendance = () => {
   return (
     <Card className="mt-6">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Weekly Attendance</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <CalendarCheck className="h-5 w-5" />
+          Weekly Attendance
+        </CardTitle>
         <div className="flex items-center gap-2">
           <Select value={selectedClass} onValueChange={setSelectedClass}>
             <SelectTrigger className="w-[180px]">
@@ -115,7 +123,10 @@ const WeeklyAttendance = () => {
             {filteredStudents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={weekDays.length + 1} className="text-center text-gray-500 h-32">
-                  {selectedClass ? "No students in this class" : "Select a class to view students"}
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <CalendarX className="h-10 w-10 text-gray-400" />
+                    {selectedClass ? "No students in this class" : "Select a class to view students"}
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
@@ -131,7 +142,7 @@ const WeeklyAttendance = () => {
                             variant="outline"
                             className={getStatusBadgeClass(status)}
                           >
-                            {status}
+                            {status.charAt(0).toUpperCase() + status.slice(1)}
                           </Badge>
                         ) : (
                           <span className="text-gray-400">-</span>

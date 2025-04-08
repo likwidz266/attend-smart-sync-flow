@@ -21,14 +21,27 @@ const ReportForm = () => {
     end: new Date().toISOString().split('T')[0]
   });
   const { toast } = useToast();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const generateReport = () => {
     try {
+      setIsGenerating(true);
       let reportStudents = students;
       
       // Filter by class if selected
       if (selectedClass) {
         reportStudents = students.filter(student => student.class === selectedClass);
+      }
+      
+      // Ensure we have students to report on
+      if (reportStudents.length === 0) {
+        toast({
+          title: "No Students Found",
+          description: "There are no students matching your selection criteria.",
+          variant: "destructive",
+        });
+        setIsGenerating(false);
+        return;
       }
       
       // Generate the report
@@ -43,14 +56,14 @@ const ReportForm = () => {
       const url = URL.createObjectURL(reportBlob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `attendance_report_${dateRange.start}_to_${dateRange.end}.xlsx`;
+      a.download = `attendance_report_${selectedClass ? selectedClass.replace(/\s+/g, '_') + '_' : ''}${dateRange.start}_to_${dateRange.end}.xlsx`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
       
       toast({
-        title: "Report Generated",
+        title: "Report Generated Successfully",
         description: "Your attendance report has been downloaded.",
       });
     } catch (error) {
@@ -60,6 +73,8 @@ const ReportForm = () => {
         description: "There was an error generating your report. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -112,15 +127,20 @@ const ReportForm = () => {
                 value={dateRange.end}
                 onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
                 className="pl-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                min={dateRange.start}
               />
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter>
-        <Button onClick={generateReport} className="w-full gap-2">
+        <Button 
+          onClick={generateReport} 
+          className="w-full gap-2" 
+          disabled={isGenerating}
+        >
           <FileSpreadsheet className="h-4 w-4" />
-          <span>Generate Excel Report</span>
+          <span>{isGenerating ? "Generating..." : "Generate Excel Report"}</span>
         </Button>
       </CardFooter>
     </Card>

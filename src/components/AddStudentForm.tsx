@@ -15,11 +15,25 @@ const AddStudentForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
+  const [customClass, setCustomClass] = useState("");
+  const [showCustomClass, setShowCustomClass] = useState(false);
+
+  const handleClassChange = (value: string) => {
+    if (value === "custom") {
+      setShowCustomClass(true);
+      setSelectedClass("");
+    } else {
+      setShowCustomClass(false);
+      setSelectedClass(value);
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!name || !email || !selectedClass) {
+    const finalClassName = showCustomClass ? customClass : selectedClass;
+    
+    if (!name || !email || (!finalClassName && !showCustomClass) || (showCustomClass && !customClass)) {
       toast({
         title: "Missing Information",
         description: "Please fill in all the required fields.",
@@ -32,7 +46,7 @@ const AddStudentForm = () => {
       id: `student-${Date.now()}`,
       name,
       email,
-      class: selectedClass,
+      class: finalClassName,
     };
     
     addStudents([newStudent]);
@@ -46,6 +60,8 @@ const AddStudentForm = () => {
     setName("");
     setEmail("");
     setSelectedClass("");
+    setCustomClass("");
+    setShowCustomClass(false);
   };
 
   return (
@@ -81,7 +97,10 @@ const AddStudentForm = () => {
           
           <div className="space-y-2">
             <Label htmlFor="class">Class</Label>
-            <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <Select 
+              value={showCustomClass ? "custom" : selectedClass} 
+              onValueChange={handleClassChange}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select a class" />
               </SelectTrigger>
@@ -91,9 +110,22 @@ const AddStudentForm = () => {
                     {classInfo.name}
                   </SelectItem>
                 ))}
+                <SelectItem value="custom">Add New Class</SelectItem>
               </SelectContent>
             </Select>
           </div>
+          
+          {showCustomClass && (
+            <div className="space-y-2">
+              <Label htmlFor="customClass">New Class Name</Label>
+              <Input
+                id="customClass"
+                value={customClass}
+                onChange={(e) => setCustomClass(e.target.value)}
+                placeholder="Enter new class name"
+              />
+            </div>
+          )}
           
           <Button type="submit" className="w-full">Add Student</Button>
         </form>

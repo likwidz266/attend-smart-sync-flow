@@ -1,4 +1,3 @@
-
 import { createContext, useState, useContext, ReactNode } from "react";
 
 export type Student = {
@@ -74,27 +73,39 @@ export const AttendanceProvider = ({ children }: { children: ReactNode }) => {
   ]);
 
   const addStudents = (newStudents: Student[]) => {
-    // Avoid duplicates based on ID
-    const existingIds = new Set(students.map(s => s.id));
-    const uniqueNewStudents = newStudents.filter(s => !existingIds.has(s.id));
+    setStudents(prevStudents => [...prevStudents, ...newStudents]);
     
-    setStudents([...students, ...uniqueNewStudents]);
+    const updatedClasses = [...classes];
     
-    // Update class student counts
-    const classCountMap = new Map<string, number>();
-    [...students, ...uniqueNewStudents].forEach(student => {
-      const currentCount = classCountMap.get(student.class) || 0;
-      classCountMap.set(student.class, currentCount + 1);
+    const classIndices: Record<string, number> = {};
+    classes.forEach((c, index) => {
+      classIndices[c.name] = index;
     });
     
-    setClasses(classes.map(c => ({
-      ...c,
-      studentCount: classCountMap.get(c.name) || c.studentCount
-    })));
+    newStudents.forEach(student => {
+      const className = student.class;
+      
+      if (className in classIndices) {
+        const index = classIndices[className];
+        updatedClasses[index] = {
+          ...updatedClasses[index],
+          studentCount: updatedClasses[index].studentCount + 1
+        };
+      } else {
+        const newClass: ClassInfo = {
+          id: `class-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+          name: className,
+          studentCount: 1
+        };
+        updatedClasses.push(newClass);
+        classIndices[className] = updatedClasses.length - 1;
+      }
+    });
+    
+    setClasses(updatedClasses);
   };
 
   const addAttendanceRecords = (records: AttendanceRecord[]) => {
-    // Replace existing records for the same student and date
     const existingRecords = new Map(
       attendanceRecords.map(record => [`${record.studentId}-${record.date}`, record])
     );
