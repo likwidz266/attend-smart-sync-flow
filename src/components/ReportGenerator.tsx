@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ReportForm from "./reports/ReportForm";
 import ReportOptionCards from "./reports/ReportOptionCards";
 import AttendanceAnalytics from "./reports/AttendanceAnalytics";
+import ReportSummary from "./reports/ReportSummary";
 
 const ReportGenerator = () => {
   return (
@@ -12,15 +13,20 @@ const ReportGenerator = () => {
         <p className="text-gray-500">Generate and download attendance reports</p>
       </div>
       
-      <Tabs defaultValue="generate">
+      <Tabs defaultValue="summary">
         <TabsList>
+          <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="generate">Generate Report</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
         
+        <TabsContent value="summary" className="space-y-4 mt-4">
+          <ReportSummary />
+          <ReportOptionCards />
+        </TabsContent>
+        
         <TabsContent value="generate" className="space-y-4 mt-4">
           <ReportForm />
-          <ReportOptionCards />
         </TabsContent>
         
         <TabsContent value="analytics" className="space-y-4 mt-4">

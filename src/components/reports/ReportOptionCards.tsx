@@ -2,6 +2,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { FileText, Download, Calendar, BarChart } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import ReportSummary from "./ReportSummary";
 
 const ReportOptionCards = () => {
   return (
@@ -16,10 +18,23 @@ const ReportOptionCards = () => {
             <p className="text-sm text-gray-500 mt-1 mb-4">
               Basic attendance statistics
             </p>
-            <Button variant="outline" className="w-full gap-2" disabled>
-              <Download className="h-4 w-4" />
-              <span>Coming Soon</span>
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full gap-2">
+                  <FileText className="h-4 w-4" />
+                  <span>View Summary</span>
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[800px]">
+                <DialogHeader>
+                  <DialogTitle>Attendance Summary</DialogTitle>
+                  <DialogDescription>
+                    Detailed summary of attendance statistics
+                  </DialogDescription>
+                </DialogHeader>
+                <ReportSummary />
+              </DialogContent>
+            </Dialog>
           </div>
         </CardContent>
       </Card>

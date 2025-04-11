@@ -4,7 +4,7 @@ import { useAttendance } from "@/context/AttendanceContext";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FileSpreadsheet, Calendar } from "lucide-react";
+import { FileSpreadsheet, Calendar, CheckCircle } from "lucide-react";
 import { generateAttendanceReport } from "@/utils/attendanceUtils";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,10 +22,12 @@ const ReportForm = () => {
   });
   const { toast } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const generateReport = () => {
     try {
       setIsGenerating(true);
+      setShowSuccess(false);
       let reportStudents = students;
       
       // Filter by class if selected
@@ -66,6 +68,12 @@ const ReportForm = () => {
         title: "Report Generated Successfully",
         description: "Your attendance report has been downloaded.",
       });
+      
+      // Show success state briefly
+      setShowSuccess(true);
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 3000);
     } catch (error) {
       console.error("Error generating report:", error);
       toast({
@@ -139,8 +147,17 @@ const ReportForm = () => {
           className="w-full gap-2" 
           disabled={isGenerating}
         >
-          <FileSpreadsheet className="h-4 w-4" />
-          <span>{isGenerating ? "Generating..." : "Generate Excel Report"}</span>
+          {showSuccess ? (
+            <>
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span>Report Downloaded!</span>
+            </>
+          ) : (
+            <>
+              <FileSpreadsheet className="h-4 w-4" />
+              <span>{isGenerating ? "Generating..." : "Generate Excel Report"}</span>
+            </>
+          )}
         </Button>
       </CardFooter>
     </Card>
