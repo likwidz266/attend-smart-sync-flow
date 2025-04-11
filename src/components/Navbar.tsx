@@ -1,12 +1,14 @@
 
-import { Bell, FileSpreadsheet, Home, Users } from "lucide-react";
+import { Bell, FileSpreadsheet, Home, LogOut, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
   const [activePath, setActivePath] = useState("/");
+  const { logout, userType } = useAuth();
   
   useEffect(() => {
     setActivePath(location.pathname);
@@ -43,9 +45,15 @@ const Navbar = () => {
             ))}
           </div>
           
-          <div className="flex items-center">
-            <Button variant="outline" size="sm">
-              Help
+          <div className="flex items-center gap-2">
+            {userType && (
+              <span className="text-sm font-medium text-gray-600 hidden md:inline-block">
+                {userType === "teacher" ? "Teacher" : "Student"}
+              </span>
+            )}
+            <Button variant="outline" size="sm" onClick={logout}>
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
             </Button>
           </div>
         </div>
