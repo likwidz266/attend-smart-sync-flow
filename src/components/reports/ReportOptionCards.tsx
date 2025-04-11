@@ -68,6 +68,7 @@ const ReportOptionCards = () => {
               description="Basic attendance statistics and insights"
               buttonText="View Summary"
               buttonIcon={<FileText className="h-4 w-4" />}
+              onClick={() => {}} // Added the missing onClick prop
               color="#3b82f6"
             />
           </div>
