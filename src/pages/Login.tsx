@@ -7,21 +7,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserLoginForm } from "@/components/auth/UserLoginForm";
 import { GoogleLoginButton } from "@/components/auth/GoogleLoginButton";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/context/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [userType, setUserType] = useState<"student" | "teacher">("student");
+  const { login } = useAuth();
 
   const handleSuccessfulLogin = (type: "student" | "teacher") => {
+    // Use the AuthContext login function instead of directly setting localStorage
+    login(type);
+    
     toast({
       title: "Login Successful",
       description: `Welcome back! You've logged in as a ${type}.`,
     });
-    
-    // Store user type in localStorage for persistence
-    localStorage.setItem("userType", type);
-    localStorage.setItem("isLoggedIn", "true");
     
     // Redirect to appropriate dashboard
     navigate("/");

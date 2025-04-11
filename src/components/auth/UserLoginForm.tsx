@@ -41,7 +41,7 @@ export function UserLoginForm({ userType, onSuccess }: UserLoginFormProps) {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Demo login success - In a real app, this would check actual credentials
+      // For this demo, accept any well-formed email
       if (values.email.includes('@')) {
         onSuccess();
       } else {
