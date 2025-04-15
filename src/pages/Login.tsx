@@ -15,9 +15,9 @@ const Login = () => {
   const [userType, setUserType] = useState<"student" | "teacher">("student");
   const { login } = useAuth();
 
-  const handleSuccessfulLogin = (type: "student" | "teacher") => {
-    // Use the AuthContext login function instead of directly setting localStorage
-    login(type);
+  const handleSuccessfulLogin = (type: "student" | "teacher", email: string) => {
+    // Use the AuthContext login function with both type and email parameters
+    login(type, email);
     
     toast({
       title: "Login Successful",
@@ -57,7 +57,7 @@ const Login = () => {
               </div>
               <UserLoginForm 
                 userType="student" 
-                onSuccess={() => handleSuccessfulLogin("student")}
+                onSuccess={(email) => handleSuccessfulLogin("student", email)}
               />
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
@@ -71,7 +71,7 @@ const Login = () => {
               </div>
               <GoogleLoginButton 
                 userType="student" 
-                onSuccess={() => handleSuccessfulLogin("student")}
+                onSuccess={(email) => handleSuccessfulLogin("student", email)}
               />
             </TabsContent>
             
@@ -82,7 +82,7 @@ const Login = () => {
               </div>
               <UserLoginForm 
                 userType="teacher" 
-                onSuccess={() => handleSuccessfulLogin("teacher")} 
+                onSuccess={(email) => handleSuccessfulLogin("teacher", email)} 
               />
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
@@ -96,7 +96,7 @@ const Login = () => {
               </div>
               <GoogleLoginButton 
                 userType="teacher" 
-                onSuccess={() => handleSuccessfulLogin("teacher")}
+                onSuccess={(email) => handleSuccessfulLogin("teacher", email)}
               />
             </TabsContent>
           </Tabs>
