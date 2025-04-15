@@ -3,7 +3,6 @@ import Navbar from "@/components/Navbar";
 import Dashboard from "@/components/Dashboard";
 import StudentDashboard from "@/components/StudentDashboard";
 import StudentList from "@/components/StudentList";
-import ReportGenerator from "@/components/ReportGenerator";
 import NotificationCenter from "@/components/NotificationCenter";
 import { AttendanceProvider } from "@/context/AttendanceContext";
 import { useEffect, useState } from "react";
@@ -42,7 +41,7 @@ const Index = () => {
       case "students":
         return <StudentList />;
       case "reports":
-        return <ReportGenerator />;
+        return <NotificationCenter />;
       case "notifications":
         return <NotificationCenter />;
       default:

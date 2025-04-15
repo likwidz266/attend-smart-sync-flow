@@ -1,5 +1,5 @@
 
-import { Student, AttendanceRecord } from "../context/AttendanceContext";
+import { Student, AttendanceRecord } from "@/context/AttendanceContext";
 import * as XLSX from 'xlsx';
 
 // Parse Excel or CSV file to extract attendance data

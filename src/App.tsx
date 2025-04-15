@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import ReportGenerator from "./components/ReportGenerator";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ const App = () => (
             } />
             <Route path="/reports" element={
               <ProtectedRoute requiredRole="teacher">
-                <Index />
+                <ReportGenerator />
               </ProtectedRoute>
             } />
             <Route path="/notifications" element={
