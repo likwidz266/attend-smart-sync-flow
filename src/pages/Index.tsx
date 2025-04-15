@@ -40,8 +40,6 @@ const Index = () => {
         return <Dashboard />;
       case "students":
         return <StudentList />;
-      case "reports":
-        return <NotificationCenter />;
       case "notifications":
         return <NotificationCenter />;
       default:
