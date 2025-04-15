@@ -21,8 +21,6 @@ const Index = () => {
       setCurrentPage("dashboard");
     } else if (path.includes("students")) {
       setCurrentPage("students");
-    } else if (path.includes("reports")) {
-      setCurrentPage("reports");
     } else if (path.includes("notifications")) {
       setCurrentPage("notifications");
     }
