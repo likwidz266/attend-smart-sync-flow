@@ -1,16 +1,19 @@
 
 import Navbar from "@/components/Navbar";
 import Dashboard from "@/components/Dashboard";
+import StudentDashboard from "@/components/StudentDashboard";
 import StudentList from "@/components/StudentList";
 import ReportGenerator from "@/components/ReportGenerator";
 import NotificationCenter from "@/components/NotificationCenter";
 import { AttendanceProvider } from "@/context/AttendanceContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Index = () => {
   const location = useLocation();
   const [currentPage, setCurrentPage] = useState("dashboard");
+  const { isTeacher, isStudent } = useAuth();
   
   useEffect(() => {
     const path = location.pathname;
@@ -27,6 +30,12 @@ const Index = () => {
   }, [location]);
 
   const renderContent = () => {
+    // Students can only see their own dashboard
+    if (isStudent()) {
+      return <StudentDashboard />;
+    }
+
+    // Teachers can access all pages
     switch (currentPage) {
       case "dashboard":
         return <Dashboard />;

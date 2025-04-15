@@ -24,7 +24,7 @@ const Login = () => {
       description: `Welcome back! You've logged in as a ${type}.`,
     });
     
-    // Redirect to appropriate dashboard
+    // Redirect to dashboard
     navigate("/");
   };
 
@@ -40,11 +40,21 @@ const Login = () => {
         <CardContent>
           <Tabs defaultValue="student" onValueChange={(value) => setUserType(value as "student" | "teacher")}>
             <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="student">Student</TabsTrigger>
-              <TabsTrigger value="teacher">Teacher</TabsTrigger>
+              <TabsTrigger value="student">
+                Student
+                <span className="ml-2 text-xs bg-blue-100 text-blue-800 py-0.5 px-1.5 rounded-full">View Only</span>
+              </TabsTrigger>
+              <TabsTrigger value="teacher">
+                Teacher
+                <span className="ml-2 text-xs bg-green-100 text-green-800 py-0.5 px-1.5 rounded-full">Full Access</span>
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="student">
+              <div className="bg-blue-50 p-3 rounded-md mb-4 text-sm">
+                <p className="font-medium text-blue-800">Student Access</p>
+                <p className="text-blue-600">You will be able to view your attendance records, but cannot modify data.</p>
+              </div>
               <UserLoginForm 
                 userType="student" 
                 onSuccess={() => handleSuccessfulLogin("student")}
@@ -66,6 +76,10 @@ const Login = () => {
             </TabsContent>
             
             <TabsContent value="teacher">
+              <div className="bg-green-50 p-3 rounded-md mb-4 text-sm">
+                <p className="font-medium text-green-800">Teacher Access</p>
+                <p className="text-green-600">You will have full access to manage student attendance and generate reports.</p>
+              </div>
               <UserLoginForm 
                 userType="teacher" 
                 onSuccess={() => handleSuccessfulLogin("teacher")} 

@@ -22,9 +22,21 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/students" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/reports" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/students" element={
+              <ProtectedRoute requiredRole="teacher">
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/reports" element={
+              <ProtectedRoute requiredRole="teacher">
+                <Index />
+              </ProtectedRoute>
+            } />
+            <Route path="/notifications" element={
+              <ProtectedRoute requiredRole="teacher">
+                <Index />
+              </ProtectedRoute>
+            } />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

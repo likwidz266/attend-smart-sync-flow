@@ -9,6 +9,9 @@ interface AuthContextType {
   userType: UserType;
   login: (type: "student" | "teacher") => void;
   logout: () => void;
+  isTeacher: () => boolean;
+  isStudent: () => boolean;
+  canModifyAttendance: () => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,8 +47,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     navigate("/login");
   };
 
+  const isTeacher = () => userType === "teacher";
+  const isStudent = () => userType === "student";
+  const canModifyAttendance = () => userType === "teacher";
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userType, login, logout }}>
+    <AuthContext.Provider value={{ 
+      isLoggedIn, 
+      userType, 
+      login, 
+      logout, 
+      isTeacher, 
+      isStudent, 
+      canModifyAttendance 
+    }}>
       {children}
     </AuthContext.Provider>
   );
