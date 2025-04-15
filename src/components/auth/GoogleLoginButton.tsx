@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface GoogleLoginButtonProps {
   userType: "student" | "teacher";
-  onSuccess: () => void;
+  onSuccess: (email: string) => void;
 }
 
 export function GoogleLoginButton({ userType, onSuccess }: GoogleLoginButtonProps) {
@@ -23,7 +23,10 @@ export function GoogleLoginButton({ userType, onSuccess }: GoogleLoginButtonProp
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Demo login success - In a real app, this would use the Google Auth API
-      onSuccess();
+      // Generate a mock email for demo purposes
+      const mockEmail = `${userType}${Math.floor(Math.random() * 1000)}@example.com`;
+      
+      onSuccess(mockEmail);
       
     } catch (error) {
       toast({

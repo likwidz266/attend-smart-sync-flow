@@ -16,7 +16,7 @@ const formSchema = z.object({
 
 interface UserLoginFormProps {
   userType: "student" | "teacher";
-  onSuccess: () => void;
+  onSuccess: (email: string) => void;
 }
 
 export function UserLoginForm({ userType, onSuccess }: UserLoginFormProps) {
@@ -43,7 +43,7 @@ export function UserLoginForm({ userType, onSuccess }: UserLoginFormProps) {
       
       // For this demo, accept any well-formed email
       if (values.email.includes('@')) {
-        onSuccess();
+        onSuccess(values.email);
       } else {
         toast({
           title: "Login Failed",
