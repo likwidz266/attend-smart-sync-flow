@@ -5,6 +5,7 @@ export type Student = {
   name: string;
   email: string;
   class: string;
+  userId?: string;
 };
 
 export type AttendanceRecord = {
@@ -32,6 +33,8 @@ type AttendanceContextType = {
   getClassAttendance: (classId: string) => { records: AttendanceRecord[], students: Student[] };
   getAttendanceByDate: (date: string) => AttendanceRecord[];
   getAbsentees: (date: string) => Student[];
+  linkStudentToUser: (studentId: string, userId: string) => void;
+  getStudentByUserId: (userId: string) => Student | undefined;
 };
 
 const AttendanceContext = createContext<AttendanceContextType | null>(null);
@@ -149,6 +152,18 @@ export const AttendanceProvider = ({ children }: { children: ReactNode }) => {
     ).filter(student => student !== undefined) as Student[];
   };
 
+  const linkStudentToUser = (studentId: string, userId: string) => {
+    setStudents(prevStudents => 
+      prevStudents.map(student => 
+        student.id === studentId ? { ...student, userId } : student
+      )
+    );
+  };
+
+  const getStudentByUserId = (userId: string) => {
+    return students.find(student => student.userId === userId);
+  };
+
   const value = {
     students,
     attendanceRecords,
@@ -159,7 +174,9 @@ export const AttendanceProvider = ({ children }: { children: ReactNode }) => {
     getStudentAttendance,
     getClassAttendance,
     getAttendanceByDate,
-    getAbsentees
+    getAbsentees,
+    linkStudentToUser,
+    getStudentByUserId
   };
 
   return (

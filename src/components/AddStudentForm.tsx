@@ -42,18 +42,23 @@ const AddStudentForm = () => {
       return;
     }
     
+    // Generate a user ID for potential login
+    // In a real app, you'd create a student account with a secure password
+    const studentUserId = `student-${email.replace(/[^a-zA-Z0-9]/g, '')}-${Date.now()}`;
+    
     const newStudent = {
       id: `student-${Date.now()}`,
       name,
       email,
       class: finalClassName,
+      userId: studentUserId, // Associate with a user ID
     };
     
     addStudents([newStudent]);
     
     toast({
       title: "Student Added",
-      description: `${name} has been added successfully.`,
+      description: `${name} has been added successfully. They can now login with their email address.`,
     });
     
     // Reset form
@@ -93,6 +98,9 @@ const AddStudentForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter student email"
             />
+            <p className="text-xs text-gray-500">
+              Students will use this email to log in to their accounts
+            </p>
           </div>
           
           <div className="space-y-2">

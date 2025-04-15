@@ -9,8 +9,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 
 const StudentDashboard = () => {
-  const { attendanceRecords, getStudentAttendance, students } = useAttendance();
-  const { userType } = useAuth();
+  const { attendanceRecords, getStudentAttendance, students, getStudentByUserId } = useAttendance();
+  const { userType, userId } = useAuth();
   const [studentAttendance, setStudentAttendance] = useState<any[]>([]);
   const [summary, setSummary] = useState({
     total: 0,
@@ -21,17 +21,28 @@ const StudentDashboard = () => {
     absentPercentage: 0,
     latePercentage: 0
   });
+  const [currentStudent, setCurrentStudent] = useState<any>(null);
 
-  // This is just a simulation - in a real app, we'd have the actual student ID
-  // from authentication. Here we're just showing all records as if they belong to the student
   useEffect(() => {
-    if (userType === "student" && students.length > 0) {
-      // Using the first student as a placeholder - in a real app, this would be the logged-in student
-      const records = getStudentAttendance(students[0]?.id || "");
-      setStudentAttendance(records);
-      setSummary(generateAttendanceSummary(records));
+    if (userType === "student" && userId) {
+      // Find the student record associated with the logged-in user
+      const studentRecord = getStudentByUserId(userId);
+      
+      if (studentRecord) {
+        setCurrentStudent(studentRecord);
+        const records = getStudentAttendance(studentRecord.id);
+        setStudentAttendance(records);
+        setSummary(generateAttendanceSummary(records));
+      } else if (students.length > 0) {
+        // Fallback for demo purposes - in a real app we'd handle this differently
+        // This is just to show data for demo purposes
+        setCurrentStudent(students[0]);
+        const records = getStudentAttendance(students[0].id);
+        setStudentAttendance(records);
+        setSummary(generateAttendanceSummary(records));
+      }
     }
-  }, [userType, students, getStudentAttendance, attendanceRecords]);
+  }, [userType, userId, getStudentAttendance, getStudentByUserId, students, attendanceRecords]);
 
   const getStatusBadgeClass = (status: string) => {
     switch (status) {
@@ -67,7 +78,11 @@ const StudentDashboard = () => {
     <div className="space-y-6 p-6 pb-16 md:pb-6">
       <div>
         <h1 className="text-2xl font-bold">My Attendance</h1>
-        <p className="text-gray-500">View your attendance records</p>
+        <p className="text-gray-500">
+          {currentStudent ? 
+            `View attendance for ${currentStudent.name} in ${currentStudent.class}` : 
+            "View your attendance records"}
+        </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
