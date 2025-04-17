@@ -61,10 +61,22 @@ export default {
           'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))'
+        },
+        'light-blue': {
+          50: '#E6F2FF',
+          100: '#B3DFFF',
+          200: '#80CCFF',
+          300: '#4DB9FF',
+          400: '#1AA6FF',
+          500: '#0094FF', // Primary light blue
+          600: '#007ACC',
+          700: '#005C99',
+          800: '#003D66',
+          900: '#001E33',
         }
       },
       backgroundImage: {
-        'login-gradient': 'linear-gradient(135deg, #9b87f5 0%, #6E59A5 100%)',
+        'login-gradient': 'linear-gradient(135deg, #87CEFA 0%, #4169E1 100%)', // Light Sky Blue to Royal Blue
       },
       boxShadow: {
         'login-card': '0 10px 25px rgba(110, 89, 165, 0.2)',
