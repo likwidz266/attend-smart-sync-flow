@@ -16,11 +16,11 @@ const AbsenceExplanationForm = () => {
   const [date, setDate] = useState<Date>();
   const [explanation, setExplanation] = useState("");
   const { getStudentByUserId, updateAttendanceRecord, attendanceRecords } = useAttendance();
-  const { user } = useAuth();
+  const { userId } = useAuth();
   const { toast } = useToast();
 
   const handleSubmit = () => {
-    if (!date || !explanation.trim() || !user) {
+    if (!date || !explanation.trim() || !userId) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields",
@@ -29,7 +29,7 @@ const AbsenceExplanationForm = () => {
       return;
     }
 
-    const student = getStudentByUserId(user.id);
+    const student = getStudentByUserId(userId);
     if (!student) {
       toast({
         title: "Error",

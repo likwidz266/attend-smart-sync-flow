@@ -1,3 +1,4 @@
+
 import { useAttendance } from "@/context/AttendanceContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +7,7 @@ import { generateAttendanceSummary } from "@/utils/attendanceUtils";
 import { CalendarCheck, AlertTriangle, Clock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
-import { AbsenceExplanationForm } from "./student/AbsenceExplanationForm";
+import AbsenceExplanationForm from "./student/AbsenceExplanationForm";
 
 const StudentDashboard = () => {
   const { attendanceRecords, getStudentAttendance, students, getStudentByUserId } = useAttendance();
