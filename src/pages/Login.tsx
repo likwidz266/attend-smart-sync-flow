@@ -16,7 +16,6 @@ const Login = () => {
   const { login } = useAuth();
 
   const handleSuccessfulLogin = (type: "student" | "teacher", email: string) => {
-    // Use the AuthContext login function with both type and email parameters
     login(type, email);
     
     toast({
@@ -24,34 +23,48 @@ const Login = () => {
       description: `Welcome back! You've logged in as a ${type}.`,
     });
     
-    // Redirect to dashboard
     navigate("/");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-login-gradient p-4">
+      <Card className="w-full max-w-md animate-fade-in shadow-login-card backdrop-blur-sm bg-white/80 border-none">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">AttendSync</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
+            AttendSync
+          </CardTitle>
+          <CardDescription className="text-gray-600">
             Choose your account type to sign in
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="student" onValueChange={(value) => setUserType(value as "student" | "teacher")}>
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="student">
+          <Tabs 
+            defaultValue="student" 
+            onValueChange={(value) => setUserType(value as "student" | "teacher")}
+          >
+            <TabsList className="grid w-full grid-cols-2 mb-6 bg-gray-100">
+              <TabsTrigger 
+                value="student" 
+                className="data-[state=active]:bg-primary data-[state=active]:text-white"
+              >
                 Student
-                <span className="ml-2 text-xs bg-blue-100 text-blue-800 py-0.5 px-1.5 rounded-full">View Only</span>
+                <span className="ml-2 text-xs bg-blue-100 text-blue-800 py-0.5 px-1.5 rounded-full">
+                  View Only
+                </span>
               </TabsTrigger>
-              <TabsTrigger value="teacher">
+              <TabsTrigger 
+                value="teacher" 
+                className="data-[state=active]:bg-secondary data-[state=active]:text-white"
+              >
                 Teacher
-                <span className="ml-2 text-xs bg-green-100 text-green-800 py-0.5 px-1.5 rounded-full">Full Access</span>
+                <span className="ml-2 text-xs bg-green-100 text-green-800 py-0.5 px-1.5 rounded-full">
+                  Full Access
+                </span>
               </TabsTrigger>
             </TabsList>
             
             <TabsContent value="student">
-              <div className="bg-blue-50 p-3 rounded-md mb-4 text-sm">
+              <div className="bg-blue-50 p-3 rounded-md mb-4 text-sm border-l-4 border-blue-500">
                 <p className="font-medium text-blue-800">Student Access</p>
                 <p className="text-blue-600">You will be able to view your attendance records, but cannot modify data.</p>
               </div>
@@ -64,7 +77,7 @@ const Login = () => {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">
+                  <span className="bg-white px-2 text-gray-500">
                     Or continue with
                   </span>
                 </div>
@@ -76,7 +89,7 @@ const Login = () => {
             </TabsContent>
             
             <TabsContent value="teacher">
-              <div className="bg-green-50 p-3 rounded-md mb-4 text-sm">
+              <div className="bg-green-50 p-3 rounded-md mb-4 text-sm border-l-4 border-green-500">
                 <p className="font-medium text-green-800">Teacher Access</p>
                 <p className="text-green-600">You will have full access to manage student attendance and generate reports.</p>
               </div>
@@ -89,7 +102,7 @@ const Login = () => {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-card px-2 text-muted-foreground">
+                  <span className="bg-white px-2 text-gray-500">
                     Or continue with
                   </span>
                 </div>
@@ -102,11 +115,11 @@ const Login = () => {
           </Tabs>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <p className="text-center text-sm text-muted-foreground mt-2">
+          <p className="text-center text-sm text-gray-500 mt-2">
             By clicking continue, you agree to our{" "}
-            <Button variant="link" className="p-0 h-auto">Terms of Service</Button>
+            <Button variant="link" className="p-0 h-auto text-primary">Terms of Service</Button>
             {" "}and{" "}
-            <Button variant="link" className="p-0 h-auto">Privacy Policy</Button>
+            <Button variant="link" className="p-0 h-auto text-primary">Privacy Policy</Button>
           </p>
         </CardFooter>
       </Card>
@@ -115,3 +128,4 @@ const Login = () => {
 };
 
 export default Login;
+
