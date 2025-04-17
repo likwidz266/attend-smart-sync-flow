@@ -1,4 +1,3 @@
-
 import { useAttendance } from "@/context/AttendanceContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +6,7 @@ import { generateAttendanceSummary } from "@/utils/attendanceUtils";
 import { CalendarCheck, AlertTriangle, Clock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
+import { AbsenceExplanationForm } from "./student/AbsenceExplanationForm";
 
 const StudentDashboard = () => {
   const { attendanceRecords, getStudentAttendance, students, getStudentByUserId } = useAttendance();
@@ -75,81 +75,84 @@ const StudentDashboard = () => {
   );
 
   return (
-    <div className="space-y-6 p-6 pb-16 md:pb-6">
-      <div>
-        <h1 className="text-2xl font-bold">My Attendance</h1>
-        <p className="text-gray-500">
-          {currentStudent ? 
-            `View attendance for ${currentStudent.name} in ${currentStudent.class}` : 
-            "View your attendance records"}
-        </p>
+    <div className="space-y-6 p-6 pb-16">
+      <div className="flex flex-col space-y-6">
+        <div>
+          <h1 className="text-2xl font-bold">My Attendance</h1>
+          <p className="text-gray-500">
+            {currentStudent ? 
+              `View attendance for ${currentStudent.name} in ${currentStudent.class}` : 
+              "View your attendance records"}
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard 
+            title="Present" 
+            value={summary.present} 
+            icon={<CalendarCheck className="h-5 w-5 text-white" />} 
+            description={`${summary.presentPercentage.toFixed(1)}% of total classes`} 
+            color="bg-green-500"
+          />
+          <StatCard 
+            title="Absent" 
+            value={summary.absent} 
+            icon={<AlertTriangle className="h-5 w-5 text-white" />} 
+            description={`${summary.absentPercentage.toFixed(1)}% of total classes`} 
+            color="bg-red-500"
+          />
+          <StatCard 
+            title="Late" 
+            value={summary.late} 
+            icon={<Clock className="h-5 w-5 text-white" />} 
+            description={`${summary.latePercentage.toFixed(1)}% of total classes`} 
+            color="bg-yellow-500"
+          />
+        </div>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Attendance History</CardTitle>
+            <CardDescription>Your attendance records for all classes</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            {studentAttendance.length === 0 ? (
+              <div className="p-8 text-center text-gray-500">
+                No attendance records found
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Notes</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {studentAttendance
+                    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                    .map(record => (
+                      <TableRow key={record.id}>
+                        <TableCell>{new Date(record.date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant="outline"
+                            className={getStatusBadgeClass(record.status)}
+                          >
+                            {record.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{record.notes || "-"}</TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard 
-          title="Present" 
-          value={summary.present} 
-          icon={<CalendarCheck className="h-5 w-5 text-white" />} 
-          description={`${summary.presentPercentage.toFixed(1)}% of total classes`} 
-          color="bg-green-500"
-        />
-        <StatCard 
-          title="Absent" 
-          value={summary.absent} 
-          icon={<AlertTriangle className="h-5 w-5 text-white" />} 
-          description={`${summary.absentPercentage.toFixed(1)}% of total classes`} 
-          color="bg-red-500"
-        />
-        <StatCard 
-          title="Late" 
-          value={summary.late} 
-          icon={<Clock className="h-5 w-5 text-white" />} 
-          description={`${summary.latePercentage.toFixed(1)}% of total classes`} 
-          color="bg-yellow-500"
-        />
-      </div>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Attendance History</CardTitle>
-          <CardDescription>Your attendance records for all classes</CardDescription>
-        </CardHeader>
-        <CardContent className="p-0">
-          {studentAttendance.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
-              No attendance records found
-            </div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Notes</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {studentAttendance
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-                  .map(record => (
-                    <TableRow key={record.id}>
-                      <TableCell>{new Date(record.date).toLocaleDateString()}</TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant="outline"
-                          className={getStatusBadgeClass(record.status)}
-                        >
-                          {record.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{record.notes || "-"}</TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      <AbsenceExplanationForm />
     </div>
   );
 };

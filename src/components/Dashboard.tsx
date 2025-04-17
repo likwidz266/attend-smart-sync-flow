@@ -1,4 +1,3 @@
-
 import { useAttendance } from "@/context/AttendanceContext";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,6 +6,8 @@ import { CalendarCheck, Users, AlertTriangle, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import AttendanceUpload from "./AttendanceUpload";
 import { useEffect, useState } from "react";
+import AttendancePatternCard from "./insights/AttendancePatternCard";
+import AIRecommendations from "./insights/AIRecommendations";
 
 const Dashboard = () => {
   const { classes, attendanceRecords, getClassAttendance, students, getAttendanceByDate } = useAttendance();
@@ -62,7 +63,7 @@ const Dashboard = () => {
         <AttendanceUpload />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <StatCard 
           title="Total Students" 
           value={students.length} 
@@ -91,6 +92,8 @@ const Dashboard = () => {
           description={`${todaySummary.latePercentage.toFixed(1)}% of enrolled students`} 
           color="bg-yellow-500"
         />
+        <AttendancePatternCard />
+        <AIRecommendations />
       </div>
       
       <Tabs defaultValue="classes">
